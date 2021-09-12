@@ -1,0 +1,3 @@
+﻿  Light_withGL.cpp
+D:\_My_Math\Light_withGL\Light_withGL\Light_withGL.cpp(1348,9): warning C4101: 'state': unreferenced local variable
+  Light_withGL.vcxproj -> D:\_My_Math\Light_withGL\Debug\Light_withGL.exe
