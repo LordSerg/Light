@@ -513,24 +513,24 @@ void eboshitVoVseStorons2(double x, double y, col c)
         //отражение:
         
         if (ochko.is_crossing(point(x, y), t))
-        {//если пересечение между лучем и палкой есть, то отрабатываем:
+        {//если пересечение между лучем и кружком есть, то отрабатываем:
 
             ochko.whereCrossing(point(x, y), t, t1, t2);
             glColor4d(c.r, c.g, c.b, c.a/2);
             if (dist(point(x, y), ochko.center) < ochko.r)
-            {
+            {//если (х у) внутри круга
                 glVertex2d(x, y);
                 glVertex2d(t1.x, t1.y);
                 ptAns = t1;
             }
             else if (dist(point(x, y), t1) > dist(point(x, y), t2))
-            {
+            {//если к t1 ближе 
                 glVertex2d(x, y);
                 glVertex2d(t1.x, t1.y);
                 ptAns = t1;
             }
             else
-            {
+            {//если к t2 ближе
                 glVertex2d(x, y);
                 glVertex2d(t2.x, t2.y);
                 ptAns = t2;
@@ -914,7 +914,6 @@ void SendRay(point p,double angle,col c,int n)
             //othr.p = ...;
             //krushochek kother;
             //if(t1.isCrossin)
-
             //if (t1/*[num]*/.isCrossin)
             //{
             //    if (t1/*[num]*/.id == 2)
@@ -954,7 +953,6 @@ void SendRay(point p,double angle,col c,int n)
             //    glVertex2d(p.x, p.y);
             //    glVertex2d(pt.x, pt.y);
             //}
-
             //obs1++;
         }
 
@@ -1162,7 +1160,7 @@ void SendRay2(point PtIn,double AngleIn,col c)
 }
 void herachitVoVseStorons(point p,col c)
 {
-    double d = PI / 180;
+    double d = PI / 181;
     glBegin(GL_LINES);
     for (double i = 0; i < PI * 2; i += d)
     {
@@ -1215,7 +1213,8 @@ void eboshitVOdnuStoronu(double x, double y, col c,double ang)
     }
     glEnd();
 }
-//
+
+/*
 //формы дл€ всех видов баръеров:
 class shape
 {
@@ -1267,7 +1266,7 @@ class mirror
 {//пропускает, отражает 
     //0%/100%
 };
-
+*/
 
 /*void saveScreenshotToFile(std::string filename, int width, int height) 
 {
@@ -1322,6 +1321,203 @@ class mirror
     
 }*/
 
+//класс Ћуча, каждый объект которого хранит цвет, т. начала и 5 других лучей
+krushochek* prepatstvia;
+int numOfPrepatstviy;
+double epsilon = 0.0001;
+class Ray
+{
+    static int const maxDepth = 13;
+public:
+    col c;//цвет луча
+    point beg;//начальна€ точка
+    point end;//конечна€ точка
+    double angle;//направление луча
+    int depth;//текуща€ глубина рекурсии луча
+    Ray *rays;//отражение, приломление (3 шт), прохождение дальше
+    Ray()
+    {
+        c = col();
+        beg = point();
+        end = point();
+        //rays = new Ray[5];
+        angle = 0;
+        depth = 0;
+        //for (int i = 0; i < 5; i++)rays[i] = Ray();
+    }
+    Ray(point Begin, col color/*, world*/, double Angle,int Depth)
+    {//надо как-то передать все объекты, которые надо преодолеть лучу
+        depth = Depth;
+        if (depth < maxDepth)
+        {//ставим ограничение на глубину рекурсии
+            c = color;
+            beg = Begin;
+            angle = Angle;
+            point peresechenie = point();
+            //находим точку пересечени€ с объектами
+            peresechenie = ray(beg, angle);//нашли точку пересечени€ луча с границей экрана
+            end = peresechenie;
+            bool flag = false;
+            int j = 0;
+            point t1, t2, ptAnsLocal, ptAnsMin;
+            krushochek govno;//объект, с которым в итоге взаимодействуем
+            int zz = 0;
+            for (int j = 0; j < numOfPrepatstviy; j++)
+                if (prepatstvia[j].is_crossing(beg, peresechenie))
+                {//находим первое пересечение с каким-либо преп€тствием
+                    zz=prepatstvia[j].whereCrossing(beg, peresechenie, t1, t2);
+                    govno = prepatstvia[j];
+                    flag = true;
+                    if (zz == 2)
+                    {
+                        if (dist(beg, prepatstvia[j].center) <= prepatstvia[j].r+epsilon)
+                        {//если beg внутри круга
+                            ptAnsMin = t1;
+                        }
+                        else if (dist(beg, t1) < dist(beg, t2) && dist(beg, t1) > epsilon)
+                        {//если к t1 ближе 
+                            ptAnsMin = t1;
+                        }
+                        else
+                        {//если к t2 ближе
+                            ptAnsMin = t2;
+                        }
+                    }
+                    else if (zz == 1)
+                    {
+                        if (dist(beg, t1) > epsilon)
+                            ptAnsMin = t1;
+                        else
+                        {
+                            flag = false;
+                        }
+                    }
+                    if (flag)break;
+                }
+            //если точка пересечени€ - край, а не объект, то заканчиваем этот луч, не раздел€€ его;
+            //иначе раздел€ем луч:
+            if (!flag)
+            {
+                glColor4d(c.r, c.g, c.b, c.a);
+                glVertex2d(beg.x, beg.y);
+                glVertex2d(end.x, end.y);
+            }
+            else if (flag)
+            {
+                //ищем ближайшую точку пересечени€ с окружност€ми
+                for (int i = j; i < numOfPrepatstviy; i++)
+                {
+                    if (prepatstvia[i].is_crossing(beg, peresechenie))
+                    {
+                        zz = prepatstvia[i].whereCrossing(beg, peresechenie, t1, t2);
+                        if (zz == 2)
+                        {
+                            if (dist(beg, prepatstvia[j].center) <= prepatstvia[j].r+epsilon)
+                            {//если beg внутри круга
+                                ptAnsLocal = t1;
+                            }
+                            else if (dist(beg, t1) < dist(beg, t2) && dist(beg, t1) > epsilon)
+                            {//если к t1 ближе 
+                                ptAnsLocal = t1;
+                            }
+                            else
+                            {//если к t2 ближе
+                                ptAnsLocal = t2;
+                            }
+                        }
+                        else if (zz == 1)
+                        {
+                            if (dist(beg, t1) < epsilon)
+                                ptAnsLocal = t1;
+                            else
+                                ptAnsLocal = point(1000,1000);
+                        }
+                        if (dist(beg, ptAnsMin) > dist(beg, ptAnsLocal)&&dist(beg, ptAnsLocal)>epsilon)
+                        {
+                            ptAnsMin = ptAnsLocal;
+                            govno = prepatstvia[i];
+                        }
+                    }
+                }
+                end= ptAnsMin;
+                glColor4d(c.r, c.g, c.b, c.a);
+                glVertex2d(beg.x, beg.y);
+                glVertex2d(end.x, end.y);
+                //if (c.r > 0 && c.g > 0 && c.b > 0)
+                {//если это не одноцветный луч, то делаем три преломлени€
+                    rays = new Ray[1];
+                    rays[0] = Ray(ptAnsMin,
+                        c,
+                        govno.reflection(ptAnsMin,angle),
+                        depth + 1);//отражение
+
+                    /*rays[1] = Ray(ptAnsMin,
+                        col(c.r,0,0,c.a),
+                        govno.refraction(angle,ptAnsMin,1.45),
+                        depth + 1);//преломлениеR
+
+                    rays[2] = Ray(ptAnsMin,
+                        col(0,c.g,0,c.a),
+                        govno.refraction(angle, ptAnsMin, 1.5),
+                        depth + 1);//преломлениеG
+
+                    rays[3] = Ray(ptAnsMin,
+                        col(0,0,c.b,c.a),
+                        govno.refraction(angle, ptAnsMin, 1.55),
+                        depth + 1);//преломлениеB
+
+                    rays[4] = Ray(ptAnsMin,
+                        c,
+                        angle,
+                        depth + 1);//продолжение
+                    */
+                }
+                /*else
+                {//если же это одноцветный луч, то и преломление только одно
+                    rays = new Ray[1];
+                    rays[0] = Ray(ptAnsMin,
+                        c,
+                        govno.reflection(ptAnsMin,angle),
+                        depth + 1);//отражение
+                    double k=1.5;//коэф приломлени€
+                    if (c.r > 0)
+                        k = 1.45;
+                    else if (c.g > 0)
+                        k = 1.5;
+                    else if (c.b > 0)
+                        k = 1.55;
+                    rays[1] = Ray(ptAnsMin,
+                        c,
+                        govno.refraction(angle, ptAnsMin, k),
+                        depth + 1);//преломление
+
+                    //rays[2] = Ray(ptAnsMin,
+                    //    c,
+                    //    angle,
+                    //    depth + 1);//продолжение
+                }*/
+            }
+                //glColor4d(c.r, c.g, c.b, c.a);
+                //glVertex2d(beg.x, beg.y);
+                //glVertex2d(end.x, end.y);
+            
+        }
+    }
+};
+Ray* allRays;
+void herachitLuchamiEbanutemi(double xStart,double yStart,col color,int numOfRays)
+{
+    point start = point(xStart, yStart);
+    double ang = 0, dAng = 2 * PI / (double)numOfRays;
+    glBegin(GL_LINES);
+    for (int i = 0; i < numOfRays; i++)
+    {
+        allRays[i] = Ray(start, color, ang, 0);
+        ang += dAng;
+    }
+    glEnd();
+}
+
 int main()
 {
     if (!glfwInit())
@@ -1346,6 +1542,15 @@ int main()
     //obs3 = krushochek(point(0, 0), 0.02);
     //obs4 = krushochek(point(0, 0.2), 0.02);
     int state;
+    //создаем массив лучей
+    
+    const int numOfRays=990;
+    allRays = new Ray[numOfRays];
+    numOfPrepatstviy = 1;
+    prepatstvia = new krushochek[1];
+    prepatstvia[0] = krushochek(point(0,0),0.9);
+    //prepatstvia[1] = krushochek(point(0.2,-0.2),0.2);
+
     while (!glfwWindowShouldClose(window))
     {
         //state = glfwGetKey(window, GLFW_KEY_S);
@@ -1371,13 +1576,16 @@ int main()
         //рисуем
         //pl->shine();
 
-        eboshitVoVseStorons2(msX, msY, col(1, 1, 1, 0.08));
+        //eboshitVoVseStorons2(msX, msY, col(1, 1, 1, 0.08));
         //eboshitVOdnuStoronu(msX, msY, col(1, 1, 1, 0.1),PI/3);
         //eboshitVoVseStorons(msX, msY, col(1, 1, 1, 0.5));
         //herachitVoVseStorons(point(msX, msY), col(1, 1, 1, 0.05));
-
-        glColor3d(1, 1, 1);
-
+        herachitLuchamiEbanutemi(msX,msY,col(1,1,1,0.05), numOfRays);//проблема:
+        //при 3+ отражении исчезают или приломлени€ или отражени€...
+        // 
+        
+        //prepatstvia[0].draw();
+        //prepatstvia[1].draw();
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
