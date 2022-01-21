@@ -155,13 +155,13 @@ int main()
     int state;
     //создаем массив лучей
     
-    const int numOfRays=1;
+    const int numOfRays=2000;
     allRays = new Ray[numOfRays];
     numOfPrepatstviy = 1;
     prepatstvia = new krushochek[numOfPrepatstviy];
-    prepatstvia[0] = krushochek(point(0,0),0.9);
-    //prepatstvia[1] = krushochek(point(0.3,-0.3),0.2);
-    //prepatstvia[2] = krushochek(point(-0.6,0.4),0.3);
+    prepatstvia[0] = krushochek(point(0,0),0.8);
+    //prepatstvia[1] = krushochek(point(-0.6,0),0.05);
+    //prepatstvia[2] = krushochek(point(0.6,0),0.15);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -192,9 +192,7 @@ int main()
         //eboshitVOdnuStoronu(msX, msY, col(1, 1, 1, 0.1),PI/3);
         //eboshitVoVseStorons(msX, msY, col(1, 1, 1, 0.5));
         //herachitVoVseStorons(point(msX, msY), col(1, 1, 1, 0.05));
-        herachitLuchamiEbanutemi(msX,msY,col(1,1,1,1), numOfRays);//проблема:
-        //при 3+ отражении исчезают или приломления или отражения...
-        // 
+        herachitLuchamiEbanutemi(msX,msY,col(1,1,1,0.01), numOfRays);
         
         //prepatstvia[0].draw();
         //prepatstvia[1].draw();

@@ -5,7 +5,7 @@ int numOfPrepatstviy;
 
 class Ray
 {
-    static int const maxDepth = 1;//----------------------------------------важная константа
+    static int const maxDepth = 4;//----------------------------------------важная константа
 public:
     int id; //0 - для отражения
             //1 - для приломления

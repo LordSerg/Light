@@ -234,25 +234,47 @@ public:
         double C=(x1-x0)*(x1-x0)+(y1-y0)*(y1-y0)-r*r;  //0 => D=0!!!
         //if (B <= 0 && C <= 0) { B = C = 0; }
         double D = (B * B) - (4 * A * C);
-        std::cout << D<<"               \r";
-        if (D == 0)
+        t1 = (-B + sqrt(D)) / (2 * A);
+        t2 = (-B - sqrt(D)) / (2 * A);
+        if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1)
         {
-            t1 = (-B + sqrt(D)) / (2 * A);
-            //t2 = (-B - sqrt(D)) / (2 * A);
-            answer1 = point(x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1);
-            //answer2 = point(x1 + (x2 - x1) * t2, y1 + (y2 - y1) * t2);
-            return 1;
-        }
-        else if (D > 0)
-        {
-            t1 = (-B + sqrt(D)) / (2 * A);
-            t2 = (-B - sqrt(D)) / (2 * A);
             answer1 = point(x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1);
             answer2 = point(x1 + (x2 - x1) * t2, y1 + (y2 - y1) * t2);
             return 2;
         }
+        else if (t1 >= 0 && t1 <= 1)
+        {
+            answer1 = point(x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1);
+            answer2 = point(0, 0);
+            return 1;
+        }
+        else if (t2 >= 0 && t2 <= 1)
+        {
+            answer1 = point(x1 + (x2 - x1) * t2, y1 + (y2 - y1) * t2);
+            answer2 = point(0, 0);
+            return 1;
+        }
         else
             return 0;
+        //std::cout << D<<"               \r";
+        //if (D == 0)
+        //{
+        //    t1 = (-B + sqrt(D)) / (2 * A);
+        //    //t2 = (-B - sqrt(D)) / (2 * A);
+        //    answer1 = point(x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1);
+        //    //answer2 = point(x1 + (x2 - x1) * t2, y1 + (y2 - y1) * t2);
+        //    return 1;
+        //}
+        //else if (D > 0)
+        //{
+        //    t1 = (-B + sqrt(D)) / (2 * A);
+        //    t2 = (-B - sqrt(D)) / (2 * A);
+        //    answer1 = point(x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1);
+        //    answer2 = point(x1 + (x2 - x1) * t2, y1 + (y2 - y1) * t2);
+        //    return 2;
+        //}
+        //else
+        //    return 0;
     }
     double reflection(point in,double angleIn)
     {//возвращаем угол отражения
