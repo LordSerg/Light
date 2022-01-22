@@ -153,14 +153,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Light_withGL.cpp" />
-    <ClCompile Include="lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\!!!stb-master\stb-master\stb_image.h" />
-    <ClInclude Include="..\..\..\!!!stb-master\stb-master\stb_image_write.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="intersection.h" />
-    <ClInclude Include="lodepng.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="ray.h" />
   </ItemGroup>

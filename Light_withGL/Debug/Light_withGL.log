@@ -1,2 +1,2 @@
 ﻿  Light_withGL.cpp
-  Light_withGL.vcxproj -> D:\_My_Math\Light_withGL\Debug\Light_withGL.exe
+D:\_My_Math\Light_withGL\Light_withGL\Functions.h(2,10): fatal error C1083: Cannot open include file: 'GLFW/glfw3.h': No such file or directory

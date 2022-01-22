@@ -18,9 +18,6 @@
     <ClCompile Include="Light_withGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lodepng.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Functions.h">
@@ -33,15 +30,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lodepng.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\!!!stb-master\stb-master\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\!!!stb-master\stb-master\stb_image_write.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
