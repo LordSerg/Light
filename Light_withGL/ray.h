@@ -1,11 +1,12 @@
 #pragma once
+#include <omp.h>
 //класс Луча, каждый объект которого хранит цвет, т. начала и 5 других лучей
 krushochek* prepatstvia;
 int numOfPrepatstviy;
 
 class Ray
 {
-    static int const maxDepth = 4;//----------------------------------------важная константа
+    static int const maxDepth = 5;//----------------------------------------важная константа
 public:
     int id; //0 - для отражения
             //1 - для приломления
@@ -514,10 +515,12 @@ void herachitLuchamiEbanutemi(double xStart,double yStart,col color,int numOfRay
     point start = point(xStart, yStart);
     double ang = 0, dAng = 2 * PI / (double)numOfRays;
     glBegin(GL_LINES);
-    for (int i = 0; i < numOfRays; i++)
+#pragma omp parallel shared(allRays)
     {
-        allRays[i] = Ray(start, color, ang, 0, 0);
-        ang += dAng;
+        for (int i = 0; i < numOfRays; i++)
+        {
+            allRays[i] = Ray(start, color, ang+dAng*i, 0, 0);
+        }
     }
     glEnd();
 }

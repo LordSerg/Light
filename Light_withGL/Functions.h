@@ -1,5 +1,6 @@
 #pragma once
 #include "GLFW/glfw3.h"
+#include "GLFW/glfw3native.h"
 int w = 1280, h = 1024;
 GLFWwindow* window;
 double epsilon = 0.0001;

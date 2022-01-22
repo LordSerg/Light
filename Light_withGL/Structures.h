@@ -245,13 +245,13 @@ public:
         else if (t1 >= 0 && t1 <= 1)
         {
             answer1 = point(x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1);
-            answer2 = point(0, 0);
+            //answer2 = point(0, 0);
             return 1;
         }
         else if (t2 >= 0 && t2 <= 1)
         {
             answer1 = point(x1 + (x2 - x1) * t2, y1 + (y2 - y1) * t2);
-            answer2 = point(0, 0);
+            //answer2 = point(0, 0);
             return 1;
         }
         else
